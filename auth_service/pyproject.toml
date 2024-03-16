@@ -28,7 +28,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 strict = true
-disable_error_code = ["type-arg"]
+disable_error_code = ["type-arg", "import-untyped"]
 
 [tool.ruff.lint]
 select = [

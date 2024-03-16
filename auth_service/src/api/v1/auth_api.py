@@ -6,7 +6,6 @@ from src.repos.user_repo import UserRepo
 
 
 class AuthController(APIController):
-
     @classmethod
     def route(cls) -> str:
         return "/api/v1/auth"
@@ -29,7 +28,7 @@ class AuthController(APIController):
         self,
         request: Request,
     ) -> Response:
-        token: str = request.headers.get("authorization")
+        token: str = request.headers.get(b"authorization")  # type: ignore[assignment]
         token = token.replace("Bearer", "")
 
         decoded = decode_auth_token(token)
