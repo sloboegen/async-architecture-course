@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "tracker-service"
+version = "0.1.0"
+description = ""
+authors = ["Evgeniy Slobodkin <eugene.slobodkin@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+psycopg = "^3.1.18"
+pydantic = "^2.6.3"
+uvicorn = "^0.28.0"
+kafka-python = "^2.0.2"
+blacksheep = "^2.0.7"
+psycopg-pool = "^3.2.1"
+python-dotenv = "^1.0.1"
+yoyo-migrations = "^8.2.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.3.2"
+mypy = "^1.9.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

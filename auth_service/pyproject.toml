@@ -1,0 +1,65 @@
+[tool.poetry]
+name = "auth_service"
+version = "0.1.0"
+description = "The Auth system for PopugTracker"
+authors = ["Evgeniy Slobodkin <you@example.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+blacksheep = "^2.0.7"
+pyjwt = "^2.8.0"
+pydantic = "^2.6.3"
+uvicorn = "^0.27.1"
+yoyo-migrations = "^8.2.0"
+psycopg-pool = "^3.2.1"
+psycopg = "^3.1.18"
+python-dotenv = "^1.0.1"
+kafka-python = "^2.0.2"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.8.0"
+ruff = "^0.3.0"
+
+[build-system]
+requires = ["poetry-core>=1.3.1"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+strict = true
+disable_error_code = ["type-arg", "import-untyped"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle error
+    "W",   # pycodestyle warning
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-namings
+    "C",   # flake8-comprehensions
+    "G",   # flake8-logging-format
+    "DTZ", # flake8-datetimetz
+    "T20", # flake8-print
+    "PL",  # pylint
+]
+ignore = [
+    "C901",    # too complex
+    "C401",    # unnecessary generator (rewrite as a `set` comprehension)
+    "C402",    # unnecessary generator (rewrite as a `dict` comprehension)
+    "PLR0911", # too many return statements
+    "PLR0912", # too many branches 
+    "PLR0913", # too many arguments in function definition
+    "PLR2004", # magic value used in comparison
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = false
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
