@@ -89,8 +89,7 @@ services:
 
   auth_service:
     build:
-      context: ./auth_service
-      dockerfile: Dockerfile
+      dockerfile: ./auth_service/Dockerfile
     ports:
       - "8080:8080"
     env_file:
@@ -100,13 +99,12 @@ services:
     depends_on:
       auth_db:
         condition: service_healthy
-      
       kafka:
         condition: service_healthy
 
   # ======== Tracker Service
   tracker_db:
-    image: "postgres:14-alpineS"
+    image: "postgres:14-alpine"
     environment:
       TZ: UTC
       PGTZ: UTC
@@ -127,8 +125,7 @@ services:
 
   tracker_service:
     build:
-      context: ./tracker_service
-      dockerfile: Dockerfile
+      dockerfile: ./tracker_service/Dockerfile
     ports:
       - "8081:8080"
     env_file:

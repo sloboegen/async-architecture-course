@@ -1,3 +1,4 @@
+import schema_registry
 from blacksheep.messages import Request, Response
 from blacksheep.server.controllers import APIController, post
 

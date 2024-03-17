@@ -1,0 +1,73 @@
+{
+    "$id": "account_role_changed_v1.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "AccountCreatedEvent",
+    "type": "object",
+    "properties": {
+        "event_id": {
+            "type": "string"
+        },
+        "event_version": {
+            "enum": [
+                1
+            ],
+            "default": 1
+        },
+        "event_name": {
+            "enum": [
+                "AccountCreated"
+            ],
+            "default": "AccountCreated"
+        },
+        "event_time": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "producer": {
+            "type": "string"
+        },
+        "data": {
+            "$ref": "#/definitions/AccountCreatedData"
+        }
+    },
+    "required": [
+        "event_id",
+        "event_version",
+        "event_name",
+        "event_time",
+        "producer",
+        "data"
+    ],
+    "definitions": {
+        "AccountCreatedData": {
+            "type": "object",
+            "properties": {
+                "public_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "role": {
+                    "$ref": "#/definitions/UserRole"
+                }
+            },
+            "required": [
+                "public_id",
+                "name",
+                "email",
+                "role"
+            ]
+        },
+        "UserRole": {
+            "enum": [
+                "admin",
+                "manager",
+                "employee"
+            ]
+        }
+    }
+}

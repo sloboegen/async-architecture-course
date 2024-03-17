@@ -13,8 +13,8 @@ from src._types import Task
 class TaskRepo(ABC):
     """Repository for storing task information."""
 
-    @override
-    def get_open_tasks(self) -> list[Task]:
+    @abstractmethod
+    def get_opened_tasks(self) -> list[Task]:
         """Returns all tasks that are not closed at the current moment."""
 
     @abstractmethod
@@ -46,8 +46,10 @@ class DBTaskRepo(TaskRepo):
                     select 
                     from tracker.task
                     where is_closed = False
-                    """
+                    """,
                 )
+
+        return []
 
     @override
     def add_task(self, task: Task) -> None:
@@ -100,8 +102,8 @@ class DBTaskRepo(TaskRepo):
     ) -> None:
         with self._db_session.connection() as conn:
             with conn.cursor(row_factory=dict_row) as cursor:
-                sql_objs = []
-                args = []
+                sql_objs: list[sql.SQL] = []
+                args: list[object] = []
 
                 if title is not None:
                     sql_objs.append(sql.SQL("title = %s"))

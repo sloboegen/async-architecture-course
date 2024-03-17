@@ -12,16 +12,20 @@ class UserRepo(ABC):
     """Repository for users data."""
 
     @final
-    def get_by_public_id(self, public_id: str) -> User | None:
-        return self.get_by_public_ids([public_id]).get(public_id)
+    def fetch_by_public_id(self, public_id: str) -> User | None:
+        return self.fetch_by_public_ids([public_id]).get(public_id)
 
     @abstractmethod
-    def get_by_public_ids(self, public_ids: list[str]) -> dict[str, User]:
+    def fetch_by_public_ids(self, public_ids: list[str]) -> dict[str, User]:
         """Returns user by public id."""
 
     @abstractmethod
-    def get_by_beak_form(self, beak_form: str) -> User | None:
+    def fetch_by_beak_form(self, beak_form: str) -> User | None:
         """Returns user by beak form."""
+
+    @abstractmethod
+    def add_user(self, user: User) -> None:
+        """Saves user."""
 
     @abstractmethod
     def modify_user_role(self, user_id: str, new_role: UserRole) -> bool:
@@ -34,7 +38,7 @@ class DBUserRepo(UserRepo):
         self._db_session: Final = db_session
 
     @override
-    def get_by_public_ids(self, public_ids: list[str]) -> dict[str, User]:
+    def fetch_by_public_ids(self, public_ids: list[str]) -> dict[str, User]:
         if not public_ids:
             return {}
 
@@ -61,7 +65,7 @@ class DBUserRepo(UserRepo):
         return {user.public_id: user for user in users}
 
     @override
-    def get_by_beak_form(self, beak_form: str) -> User | None:
+    def fetch_by_beak_form(self, beak_form: str) -> User | None:
         with self._db_session.connection() as conn:
             with conn.cursor(row_factory=class_row(User)) as cursor:
                 cursor.execute(
@@ -79,6 +83,26 @@ class DBUserRepo(UserRepo):
                 user = cursor.fetchone()
 
         return user  # type: ignore[no-any-return]
+
+    @override
+    def add_user(self, user: User) -> None:
+        with self._db_session.connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    """
+                    insert into auth.user
+                        (public_id, name, beak_form, email, role)
+                    values
+                        (%s, %s, %s, %s, %s)
+                    """,
+                    (
+                        user.public_id,
+                        user.name,
+                        user.beak_form,
+                        user.email,
+                        user.role.value,
+                    ),
+                )
 
     @override
     def modify_user_role(self, user_id: str, new_role: UserRole) -> bool:

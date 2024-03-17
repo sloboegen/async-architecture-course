@@ -73,3 +73,7 @@ docker/docker-compose.prod.yml
 
 # Release script:
 release.config.js
+
+# Venv
+.venv/
+venv/

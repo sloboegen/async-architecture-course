@@ -20,6 +20,10 @@ class UserRepo(ABC):
         """Returns user by public id."""
 
     @abstractmethod
+    def add_user(self, user: User) -> None:
+        """Saves the user."""
+
+    @abstractmethod
     def modify_user_role(self, user_id: str, new_role: UserRole) -> bool:
         """Updates a role for user with the given id."""
 
@@ -79,6 +83,20 @@ class DBUserRepo(UserRepo):
                 users = cursor.fetchall()
 
         return {user.public_id: user for user in users}
+
+    @override
+    def add_user(self, user: User) -> None:
+        with self._db_session.connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    """
+                    insert into tracker.user
+                        (public_id, name, email, role)
+                    values
+                        (%s, %s, %s, %s)
+                    """,
+                    (user.public_id, user.name, user.email, user.role.value),
+                )
 
     @override
     def modify_user_role(self, user_id: str, new_role: UserRole) -> bool:

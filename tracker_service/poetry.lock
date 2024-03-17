@@ -486,13 +486,13 @@ typing-extensions = ">=4.4"
 
 [[package]]
 name = "pydantic"
-version = "2.6.3"
+version = "2.6.4"
 description = "Data validation using Python type hints"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pydantic-2.6.3-py3-none-any.whl", hash = "sha256:72c6034df47f46ccdf81869fddb81aade68056003900a8724a4f160700016a2a"},
-    {file = "pydantic-2.6.3.tar.gz", hash = "sha256:e07805c4c7f5c6826e33a1d4c9d47950d7eaf34868e2690f8594d2e30241f11f"},
+    {file = "pydantic-2.6.4-py3-none-any.whl", hash = "sha256:cc46fce86607580867bdc3361ad462bab9c222ef042d3da86f2fb333e1d916c5"},
+    {file = "pydantic-2.6.4.tar.gz", hash = "sha256:b1704e0847db01817624a6b86766967f552dd9dbf3afba4004409f908dcc84e6"},
 ]
 
 [package.dependencies]
@@ -709,6 +709,22 @@ files = [
 ]
 
 [[package]]
+name = "schema_registry"
+version = "0.0.1"
+description = "..."
+optional = false
+python-versions = "*"
+files = []
+develop = false
+
+[package.dependencies]
+pydantic = "*"
+
+[package.source]
+type = "directory"
+url = "../schema_registry"
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -828,4 +844,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "2ebe789dcf82abae37fb83ad21379d97ed0d6b0011cb0d2f03ea2060c601e0d7"
+content-hash = "455af3423817b9db2cacaa76dde77f1b4857a99449c6377ce29e307c821c89c2"
