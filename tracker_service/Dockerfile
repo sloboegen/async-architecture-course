@@ -42,11 +42,12 @@ RUN apt-get update && \
 
 
 # Install Python-dependencies.
-COPY poetry.lock pyproject.toml /
-RUN poetry install --only=main
+COPY ./schema_registry /opt/schema_registry/
+COPY ./tracker_service/poetry.lock ./tracker_service/pyproject.toml /opt/tracker_service/
+RUN cd /opt/tracker_service && poetry install --only=main
 
 WORKDIR /opt/tracker_service
 
-COPY . /opt/tracker_service/
+COPY ./tracker_service/ /opt/tracker_service/
 
-CMD [ "/bin/bash", "-c", "poetry run uvicorn src.app:get_app --host=0.0.0.0 --port=8080" ]
+CMD [ "/bin/bash", "-c", "poetry run uvicorn src.app:get_app --factory --log-level=debug --host=0.0.0.0 --port=8080" ]

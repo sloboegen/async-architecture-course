@@ -18,7 +18,7 @@ __DB_SESSION = DBSession(__DB_URI, max_size=10)
 __KAFKA_ADDRESS = os.getenv("KAFKA_ADDRESS")
 
 
-def _user_repo_factory(services) -> DBUserRepo:  # type: ignore[no-untyped-def]
+def _user_repo_factory(services) -> UserRepo:  # type: ignore[no-untyped-def]
     return DBUserRepo(__DB_SESSION)
 
 
@@ -26,6 +26,7 @@ def _event_producer_factory(services) -> KafkaProducer:  # type: ignore[no-untyp
     return KafkaProducer(
         bootstrap_servers=[__KAFKA_ADDRESS],
         value_serializer=lambda _: json.dumps(_).encode("utf-8"),
+        api_version=(7, 3, 2),
     )
 
 

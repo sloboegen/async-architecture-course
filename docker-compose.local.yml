@@ -1,6 +1,5 @@
 version: "3.8"
 
-
 services:
   # ======== Message Broker
   zookeeper:
@@ -89,8 +88,7 @@ services:
 
   auth_service:
     build:
-      context: ./auth_service
-      dockerfile: Dockerfile
+      dockerfile: ./auth_service/Dockerfile
     ports:
       - "8080:8080"
     env_file:
@@ -100,13 +98,12 @@ services:
     depends_on:
       auth_db:
         condition: service_healthy
-      
       kafka:
         condition: service_healthy
 
   # ======== Tracker Service
   tracker_db:
-    image: "postgres:14-alpineS"
+    image: "postgres:14-alpine"
     environment:
       TZ: UTC
       PGTZ: UTC
@@ -127,8 +124,7 @@ services:
 
   tracker_service:
     build:
-      context: ./tracker_service
-      dockerfile: Dockerfile
+      dockerfile: ./tracker_service/Dockerfile
     ports:
       - "8081:8080"
     env_file:
@@ -140,11 +136,48 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
+      auth_service:
+        condition: service_started
 
-networks:
-  postgresnet:
-    driver: bridge
+  # ======== Billing Service
+  billing_db:
+    image: "postgres:14-alpine"
+    environment:
+      TZ: UTC
+      PGTZ: UTC
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+      LANGUAGE: en_US
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: billing_db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+
+  billing_service:
+    build:
+      dockerfile: ./billing_service/Dockerfile
+    ports:
+      - "8082:8080"
+    env_file:
+      - ./billing_service/.env.local
+    expose:
+      - 8082
+    depends_on:
+      billing_db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      auth_service:
+        condition: service_started
 
 volumes:
   auth-db-data:
   tracker-db-data:
+  billing-db-data:

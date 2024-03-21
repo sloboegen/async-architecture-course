@@ -42,11 +42,12 @@ RUN apt-get update && \
 
 
 # Install Python-dependencies.
-COPY poetry.lock pyproject.toml /
-RUN poetry install --only=main
+COPY ./schema_registry /opt/schema_registry/
+COPY ./auth_service/poetry.lock ./auth_service/pyproject.toml /opt/auth_service/
+RUN cd /opt/auth_service && poetry install --only=main
 
 WORKDIR /opt/auth_service
 
-COPY . /opt/auth_service/
+COPY ./auth_service/ /opt/auth_service/
 
-CMD [ "/bin/bash", "-c", "poetry run uvicorn src.app:get_app --host=0.0.0.0 --port=8080" ]
+CMD [ "/bin/bash", "-c", "poetry run uvicorn src.app:get_app --factory --log-level=debug --host=0.0.0.0 --port=8080" ]

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Final, final
 
-from psycopg.rows import class_row, dict_row
+from psycopg.rows import dict_row
 from typing_extensions import override
 
 from lib.db import DBSession
@@ -18,6 +18,10 @@ class UserRepo(ABC):
     @abstractmethod
     def fetch_by_public_ids(self, public_ids: list[str]) -> dict[str, User]:
         """Returns user by public id."""
+
+    @abstractmethod
+    def add_user(self, user: User) -> None:
+        """Saves the user."""
 
     @abstractmethod
     def modify_user_role(self, user_id: str, new_role: UserRole) -> bool:
@@ -59,7 +63,7 @@ class DBUserRepo(UserRepo):
             return {}
 
         with self._db_session.connection() as conn:
-            with conn.cursor(row_factory=class_row(User)) as cursor:
+            with conn.cursor(row_factory=dict_row) as cursor:
                 cursor.execute(
                     """
                     select public_id,
@@ -76,9 +80,31 @@ class DBUserRepo(UserRepo):
                 if cursor.rowcount == 0:
                     return {}
 
-                users = cursor.fetchall()
+                rows = cursor.fetchall()
 
-        return {user.public_id: user for user in users}
+        return {
+            row["public_id"]: User(
+                public_id=row["public_id"],
+                name=row["name"],
+                email=row["email"],
+                role=UserRole(row["role"]),
+            )
+            for row in rows
+        }
+
+    @override
+    def add_user(self, user: User) -> None:
+        with self._db_session.connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    """
+                    insert into tracker.user
+                        (public_id, name, email, role)
+                    values
+                        (%s, %s, %s, %s)
+                    """,
+                    (user.public_id, user.name, user.email, user.role.value),
+                )
 
     @override
     def modify_user_role(self, user_id: str, new_role: UserRole) -> bool:

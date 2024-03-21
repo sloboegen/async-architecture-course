@@ -16,11 +16,20 @@ AuthToken: TypeAlias = str
 
 def generate_auth_token(user: User) -> AuthToken:
     return jwt.encode(
-        payload={"user_id": user.public_id, "beak_form": user.beak_form},
+        payload={
+            "user_id": user.public_id,
+            "role": user.role.value,
+        },
         key=_AUTHSECRET,
         algorithm="HS256",
     )
 
 
-def decode_auth_token(token: str | bytes) -> dict[str, Any] | None:
-    return jwt.decode(token, _AUTHSECRET, algorithms=["HS256"])  # type: ignore[no-any-return]
+def decode_auth_token(token: str) -> dict[str, Any] | None:
+    decoded = jwt.decode(
+        token,
+        _AUTHSECRET,
+        algorithms=["HS256"],
+    )
+
+    return decoded  # type: ignore[no-any-return]

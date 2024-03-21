@@ -18,7 +18,7 @@ create table if not exists tracker.task (
     id          int  generated always as identity primary key,
     public_id   text not null,
     title       text not null,
-    is_closed   text not null,
+    is_closed   boolean not null,
     assignee_id int not null references tracker.user (id),
     created_at  timestamp with time zone not null,
     updated_at  timestamp with time zone not null,

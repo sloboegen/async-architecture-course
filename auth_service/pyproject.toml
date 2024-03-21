@@ -17,6 +17,7 @@ psycopg-pool = "^3.2.1"
 psycopg = "^3.1.18"
 python-dotenv = "^1.0.1"
 kafka-python = "^2.0.2"
+schema_registry = { path = "../schema_registry" }
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.8.0"
