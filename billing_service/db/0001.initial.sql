@@ -26,7 +26,7 @@ create table if not exists billing.balance (
     id      int  generated always as identity primary key,
     user_id int  not null references billing.user (id),
     money   int  not null,
-    constraint balance_user_id_unique (user_id)
+    constraint balance_user_id_unique unique (user_id)
 );
 
 create table if not exists billing.payment_journal (
