@@ -1,0 +1,58 @@
+{
+    "$id": "task_created_v1.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "TaskCreatedEvent",
+    "type": "object",
+    "properties": {
+        "event_id": {
+            "type": "string"
+        },
+        "event_version": {
+            "enum": [
+                1
+            ],
+            "default": 1
+        },
+        "event_name": {
+            "enum": [
+                "TaskCreated"
+            ],
+            "default": "TaskCreated"
+        },
+        "event_time": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "producer": {
+            "type": "string"
+        },
+        "data": {
+            "$ref": "#/definitions/TaskCreatedData"
+        }
+    },
+    "required": [
+        "event_id",
+        "event_version",
+        "event_name",
+        "event_time",
+        "producer",
+        "data"
+    ],
+    "definitions": {
+        "TaskCreatedData": {
+            "type": "object",
+            "properties": {
+                "public_id": {
+                    "type": "string"
+                },
+                "assignee_public_id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "public_id",
+                "assignee_public_id",
+            ]
+        }
+    }
+}

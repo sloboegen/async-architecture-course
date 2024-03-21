@@ -54,7 +54,6 @@ def get_app() -> Application:
         kafka_consumer = KafkaConsumer(
             bootstrap_servers=[__KAFKA_ADDRESS], api_version=(7, 3, 2)
         )
-        print(kafka_consumer.metrics())
 
         consumer_thread = threading.Thread(
             target=run_kafka_consumer,

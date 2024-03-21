@@ -23,7 +23,6 @@ def _user_repo_factory(services) -> UserRepo:  # type: ignore[no-untyped-def]
 
 
 def _event_producer_factory(services) -> KafkaProducer:  # type: ignore[no-untyped-def]
-    print(__KAFKA_ADDRESS)
     return KafkaProducer(
         bootstrap_servers=[__KAFKA_ADDRESS],
         value_serializer=lambda _: json.dumps(_).encode("utf-8"),

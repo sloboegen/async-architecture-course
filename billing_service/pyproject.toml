@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "billing-service"
+version = "0.1.0"
+description = "Billing service for Popug System"
+authors = ["Evgeniy Slobodkin <eugene.slobodkin@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+kafka-python = "^2.0.2"
+yoyo-migrations = "^8.2.0"
+psycopg = "^3.1.18"
+psycopg-pool = "^3.2.1"
+python-dotenv = "^1.0.1"
+pydantic = "^2.6.4"
+uvicorn = "^0.29.0"
+blacksheep = "^2.0.7"
+schema_registry = { path = "../schema_registry" }
+types-requests = "^2.31.0.20240311"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.3.3"
+mypy = "^1.9.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

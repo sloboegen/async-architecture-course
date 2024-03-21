@@ -1,4 +1,3 @@
-import dataclasses
 import uuid
 
 from blacksheep import FromJSON
@@ -13,22 +12,9 @@ from schema_registry.models.account.role_changed.v1 import (
 )
 
 from src._types import User, UserRole
+from src.api.v1._model import CreateUserData
 from src.event import KafkaTopic, wrap_event_data
 from src.repos.user_repo import UserRepo
-
-
-@dataclasses.dataclass
-class CreateUserData:
-    beak_form: str
-    name: str
-    email: str
-    role: str
-
-
-@dataclasses.dataclass
-class PatchUserRole:
-    user_public_id: str
-    new_role: UserRole
 
 
 class UserController(APIController):
@@ -59,7 +45,6 @@ class UserController(APIController):
         user_repo: UserRepo,
         kafka_producer: KafkaProducer,
     ) -> Response:
-        print(kafka_producer)
         public_id = str(uuid.uuid4())
 
         data = input.value
@@ -110,7 +95,7 @@ class UserController(APIController):
         user_repo: UserRepo,
         kafka_producer: KafkaProducer,
     ) -> Response:
-        is_ok = user_repo.modify_user_role(user_id, new_role)
+        is_ok = user_repo.modify_user_role(user_id, UserRole(new_role))
         if not is_ok:
             return self.bad_request()
 

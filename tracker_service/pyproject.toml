@@ -17,6 +17,8 @@ psycopg-pool = "^3.2.1"
 python-dotenv = "^1.0.1"
 yoyo-migrations = "^8.2.0"
 schema_registry = { path = "../schema_registry" }
+requests = "^2.31.0"
+types-requests = "^2.31.0.20240311"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.2"

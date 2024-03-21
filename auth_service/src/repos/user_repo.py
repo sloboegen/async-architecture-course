@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Final, final
 
-from psycopg.rows import class_row
+from psycopg.rows import dict_row
 from typing_extensions import override
 
 from lib.db import DBSession
@@ -43,7 +43,7 @@ class DBUserRepo(UserRepo):
             return {}
 
         with self._db_session.connection() as conn:
-            with conn.cursor(row_factory=class_row(User)) as cursor:
+            with conn.cursor(row_factory=dict_row) as cursor:
                 cursor.execute(
                     """
                     select public_id,
@@ -60,19 +60,29 @@ class DBUserRepo(UserRepo):
                 if cursor.rowcount == 0:
                     return {}
 
-                users = cursor.fetchall()
+                rows = cursor.fetchall()
 
-        return {user.public_id: user for user in users}
+        return {
+            row["public_id"]: User(
+                public_id=row["public_id"],
+                name=row["name"],
+                email=row["email"],
+                role=UserRole(row["role"]),
+                beak_form=row["beak_form"],
+            )
+            for row in rows
+        }
 
     @override
     def fetch_by_beak_form(self, beak_form: str) -> User | None:
         with self._db_session.connection() as conn:
-            with conn.cursor(row_factory=class_row(User)) as cursor:
+            with conn.cursor(row_factory=dict_row) as cursor:
                 cursor.execute(
                     """
                     select public_id,
                            name,
                            role,
+                           email,
                            beak_form
                     from auth.user
                     where beak_form = %s
@@ -80,9 +90,17 @@ class DBUserRepo(UserRepo):
                     (beak_form,),
                 )
 
-                user = cursor.fetchone()
+                row = cursor.fetchone()
+                if row is None:
+                    return None
 
-        return user  # type: ignore[no-any-return]
+        return User(
+            public_id=row["public_id"],
+            name=row["name"],
+            email=row["email"],
+            role=UserRole(row["role"]),
+            beak_form=row["beak_form"],
+        )
 
     @override
     def add_user(self, user: User) -> None:

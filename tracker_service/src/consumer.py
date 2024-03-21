@@ -5,13 +5,11 @@ from typing import final
 
 from dotenv import load_dotenv
 from kafka import KafkaConsumer  # type: ignore[import-untyped]
-from schema_registry.models.account.created.v1 import (
+from schema_registry.models.account.created.v1 import (  # type: ignore[import-untyped]
     AccountCreatedData,
-    AccountCreatedEvent,
 )
-from schema_registry.models.account.role_changed.v1 import (
+from schema_registry.models.account.role_changed.v1 import (  # type: ignore[import-untyped]
     AccountRoleChangedData,
-    AccountRoleChangedEvent,
 )
 
 from lib.db import DBSession
@@ -20,7 +18,7 @@ from src.repos.user_repo import DBUserRepo
 
 load_dotenv()
 
-_DB_URI = os.getenv("TRACKER_DB_URI")
+_DB_URI: str = os.getenv("TRACKER_DB_URI")  # type: ignore[assignment]
 
 
 @final
@@ -49,8 +47,6 @@ def run_kafka_consumer(consumer: KafkaConsumer) -> None:
 
         match event["event_name"]:
             case "AccountCreated":
-                print(event["data"])
-
                 data = AccountCreatedData.model_validate(event["data"])
                 user = User(
                     public_id=data.public_id,
