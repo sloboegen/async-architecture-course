@@ -1,5 +1,6 @@
 import json
 import os
+import threading
 
 from blacksheep import Application
 from dotenv import load_dotenv
@@ -50,8 +51,14 @@ def get_app() -> Application:
         yoyo_db_uri = __DB_URI.replace("postgresql", "postgresql+psycopg")
         apply_db_migrations(yoyo_db_uri, path_to_migrations="db")
 
-        # Launch kafka consumer.
-        kafka_consumer = KafkaConsumer(bootstrap_servers=__KAFKA_ADDRESS)
-        run_kafka_consumer(kafka_consumer)
+        kafka_consumer = KafkaConsumer(
+            bootstrap_servers=[__KAFKA_ADDRESS], api_version=(7, 3, 2)
+        )
+
+        consumer_thread = threading.Thread(
+            target=run_kafka_consumer,
+            args=(kafka_consumer,),
+        )
+        consumer_thread.start()
 
     return app
